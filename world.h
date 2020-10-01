@@ -5,7 +5,7 @@
 #include "noise.h"
 
 //Has to be odd
-#define WORLD_WIDTH 17
+#define WORLD_WIDTH 7
 #define MAX_CHUNKS (WORLD_WIDTH * WORLD_WIDTH * WORLD_WIDTH)
 
 struct World {

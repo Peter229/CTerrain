@@ -84,7 +84,7 @@ void window_loop() {
 void window_tick() {
 
 	camera_move(&window.keys);
-	//world_gen_update(&window.world, camera.pos);
+	world_gen_update(&window.world, camera.pos);
 }
 
 void window_update() {

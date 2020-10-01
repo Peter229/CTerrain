@@ -166,31 +166,32 @@ void world_find_new_chunk(struct World* world, int pos, int player_chunk_x, int 
 
 	int middle_array = WORLD_WIDTH / 2;
 
-	bool found = false;
-
 	for (int i = 0; i < WORLD_WIDTH; i++) {
 
 		for (int j = 0; j < WORLD_WIDTH; j++) {
 
 			for (int k = 0; k < WORLD_WIDTH; k++) {
 
-				if (!world->chunks[i + WORLD_WIDTH * (j + WORLD_WIDTH * k)]->generated && !found) {
+				bool found = true;
 
-					int try_gen_x = player_chunk_x + (i - middle_array);
-					int try_gen_y = player_chunk_y + (j - middle_array);
-					int try_gen_z = player_chunk_z + (k - middle_array);
+				int try_gen_x = player_chunk_x + (i - middle_array);
+				int try_gen_y = player_chunk_y + (j - middle_array);
+				int try_gen_z = player_chunk_z + (k - middle_array);
+
+				for (int x = 0; x < MAX_CHUNKS; x++) {
+					int test_x = world->chunks[x]->x;
+					int test_y = world->chunks[x]->y;
+					int test_z = world->chunks[x]->z;
+					if (try_gen_x == test_x && try_gen_y == test_y && try_gen_z == test_z) {
+						found = false;
+					}
+				}
+
+				if (found) {
 					chunk_init(world->chunks[pos], try_gen_x, try_gen_y, try_gen_z, &world->world_height_noise, &world->world_biome_noise);
-					found = true;
-					break;
+					return;
 				}
 			}
-
-			if (found) {
-				break;
-			}
-		}
-		if (found) {
-			break;
 		}
 	}
 }
@@ -228,6 +229,7 @@ void world_gen_update(struct World* world, vec3 player_pos) {
 				}
 			}
 		}
+		world_give_neighbors(world);
 	}
 
 	/*if (old_player_chunk_x != player_chunk_x || old_player_chunk_y != player_chunk_y || old_player_chunk_z != player_chunk_z) {
